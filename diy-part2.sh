@@ -13,6 +13,6 @@
 # Modify default IP
 sed -i 's/192.168.1.1/192.168.10.254/g' package/base-files/files/bin/config_generate
 
-rm -rf package/feeds/luci/luci-theme-argon
-rm -rf package/feeds/smallpackage/luci-theme-argon
-git clone https://github.com/jerrykuku/luci-theme-argon.git package/feeds/smallpackage/luci-theme-argon
+#rm -rf package/feeds/luci/luci-theme-argon
+#rm -rf package/feeds/smallpackage/luci-theme-argon
+#git clone https://github.com/jerrykuku/luci-theme-argon.git package/feeds/smallpackage/luci-theme-argon
