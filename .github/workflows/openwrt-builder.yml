@@ -38,8 +38,19 @@ jobs:
         cat /proc/cpuinfo
         cat /proc/meminfo
         cat /etc/issue
-        cat /proc/version            
-        
+        cat /proc/version
+
+    - name: Free Disk Space
+      uses: jlumbroso/free-disk-space@main
+      with:
+        tool-cache: true
+        android: true
+        dotnet: true
+        haskell: true
+        large-packages: true
+        docker-images: true
+        swap-storage: true
+
     - name: Checkout
       uses: actions/checkout@main
 
