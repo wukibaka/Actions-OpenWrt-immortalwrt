@@ -1,9 +1,17 @@
+#
+# Description: Source code update checker
+#
+
 name: Update Checker
+
+env:
+  REPO_URL: https://github.com/immortalwrt/immortalwrt
+  REPO_BRANCH: master
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 16,4 * * *
+    - cron: 0 */18 * * *
 
 jobs:
   check:
@@ -11,39 +19,30 @@ jobs:
 
     steps:
 
-    - name: Checkout
-      uses: actions/checkout@main
-      with:
-        fetch-depth: 1
-
-    - name: Checkout Repository
-      uses: actions/checkout@main
-      with:
-        repository: 'wukibaka/openwrt-packages'
-        path: 'openwrt-packages'
-        fetch-depth: 1
-
-    - name: Clone Packages
+    - name: Get Commit Hash
+      id: getHash
       run: |
-        cd $GITHUB_WORKSPACE
-        bash packages.sh
+        git clone --depth 1 $REPO_URL -b $REPO_BRANCH .
+        echo "commitHash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
-    - name: Compare
-      id: compare
+    - name: Compare Commit Hash
+      id: cacheHash
+      uses: actions/cache@main
+      with:
+        path: .commitHash
+        key: commitHash_${{ steps.getHash.outputs.commitHash }}
+
+    - name: Save New Commit Hash
+      if: steps.cacheHash.outputs.cache-hit != 'true'
       run: |
-        diff -r --exclude='*.md' ./openwrt-packages ./packages > diff.txt || true
-        if [ -s diff.txt ]; then
-          echo "::set-output name=needs-update::true"
-        else
-          echo "::set-output name=needs-update::false"
-        fi
+        echo ${{ steps.getHash.outputs.commitHash }} | tee .commitHash
 
-    - name: Trigger update
-      if: steps.compare.outputs.needs-update == 'true'
+    - name: Trigger build
+      if: steps.cacheHash.outputs.cache-hit != 'true'
       uses: peter-evans/repository-dispatch@main
       with:
         token: ${{ github.token }}
-        event-type: Update
+        event-type: Source Code Update
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
