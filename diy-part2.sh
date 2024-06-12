@@ -13,5 +13,6 @@
 # Modify default IP
 sed -i 's/192.168.1.1/192.168.10.254/g' package/base-files/files/bin/config_generate
 
-#rm -rf package/feeds/wuki/luci-app-argon-config
-#git clone -b master --single-branch --depth 1 --filter=blob:none https://github.com/jerrykuku/luci-app-argon-config.git package/feeds/wuki/luci-app-argon-config
+# Update Golang
+rm -rf package/feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang package/feeds/packages/lang/golang
