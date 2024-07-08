@@ -14,5 +14,5 @@
 sed -i 's/192.168.1.1/192.168.10.254/g' package/base-files/files/bin/config_generate
 
 # Update Golang
-rm -rf package/feeds/packages/lang/golang
-git clone https://github.com/sbwml/packages_lang_golang package/feeds/packages/lang/golang
+rm -rf feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang feeds/packages/lang/golang
